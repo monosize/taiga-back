@@ -297,6 +297,12 @@ class UserStoryViewSet(OCCResourceMixin, VotedResourceMixin, HistoryResourceMixi
         if project_slug is not None:
             retrieve_kwargs["project__slug"] = project_slug
 
+        if "ref" not in request.QUERY_PARAMS:
+            return response.BadRequest(_("ref param is needed"))
+
+        if "project_slug" not in request.QUERY_PARAMS and "project_id" not in request.QUERY_PARAMS:
+            return response.BadRequest(_("project_id or project_slug param is needed"))
+
         return self.retrieve(request, **retrieve_kwargs)
 
     @list_route(methods=["GET"])
